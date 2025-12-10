@@ -123,37 +123,71 @@ export default function PaymentCheckout() {
     }
 
     // if all validations pass
-    setProcessing(true);
-    setTimeout(() => {
-      setProcessing(false);
-      toast.success("Payment successful! Your order has been placed.", {
+    if (!user?.address) {
+      toast.error("Please add a delivery address in your profile.", {
         position: "top-center",
         style: {
-          background: "#e6ffed",
-          color: "#1a7f37",
+          background: "#ffe6e6",
+          color: "#b91c1c",
           fontWeight: "600",
         },
       });
-    }, 2000);
+      return;
+    }
 
+    setProcessing(true);
 
-
+    // Call checkout API and wait for response
     cartAPI
       .post("/checkout", {
-        deliveryAddress: user.address , 
+        deliveryAddress: user.address, 
         paymentMethod: paymentMethod,
       })
       .then((response) => {
         console.log("Checkout response:", response.data);
+        
+        const orderId = response.data?.order?._id;
+        
+        // Show success message
+        toast.success("Payment successful! Your order has been placed.", {
+          position: "top-center",
+          style: {
+            background: "#e6ffed",
+            color: "#1a7f37",
+            fontWeight: "600",
+          },
+          duration: 3000,
+        });
+
+        // Clear cart state
+        setCart(null);
+
+        // Redirect to track order page with order ID, or orders page if no ID
+        if (orderId) {
+          setTimeout(() => {
+            navigator(`/track/${orderId}`);
+          }, 1500);
+        } else {
+          setTimeout(() => {
+            navigator("/myOrders");
+          }, 1500);
+        }
       })
       .catch((error) => {
         console.error("Error during checkout:", error);
+        setProcessing(false);
+        
+        const errorMessage = error.response?.data?.message || "Failed to place order. Please try again.";
+        toast.error(errorMessage, {
+          position: "top-center",
+          style: {
+            background: "#ffe6e6",
+            color: "#b91c1c",
+            fontWeight: "600",
+          },
+          duration: 4000,
+        });
       });
-
-    // Redirect to home after payment
-    setTimeout(() => {
-      navigator("/");
-    }, 2500);
   };
 
 

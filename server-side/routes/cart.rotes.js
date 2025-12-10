@@ -129,6 +129,7 @@ router.post("/checkout", protect, async (req, res) => {
     });
 
     await newOrder.save();
+    console.log("Order created successfully:", newOrder._id);
 
     // Add order to user's orders array
     const user = await User.findById(userId);
@@ -137,14 +138,19 @@ router.post("/checkout", protect, async (req, res) => {
     }
     user.orders.push(newOrder._id);
     await user.save();
+    console.log("Order added to user's orders array. User ID:", userId);
 
     // Clear cart
     cart.items = [];
     await cart.save();
+    console.log("Cart cleared for user:", userId);
 
     // Populate order before sending response
     await newOrder.populate("subOrders.items.food");
     await newOrder.populate("subOrders.restaurant", "name logoUrl");
+    await newOrder.populate("customer", "name email");
+
+    console.log("Order populated and ready to send. Order ID:", newOrder._id);
 
     res.status(201).json({ 
       message: "Checkout successful, order created", 

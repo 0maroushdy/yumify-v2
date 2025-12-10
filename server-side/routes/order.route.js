@@ -16,14 +16,18 @@ router.get("/", protect, async (req, res) => {
       // Owner sees only orders for their restaurant
       const restaurant = await Restaurant.findOne({ owner: req.user._id });
       if (!restaurant) {
+        console.log("Restaurant not found for owner:", req.user._id);
         return res.status(404).json({ message: "Restaurant not found" });
       }
       
+      console.log("Fetching orders for restaurant:", restaurant._id);
       orders = await Order.find({ "subOrders.restaurant": restaurant._id })
         .populate("customer", "name email phone")
         .populate("subOrders.items.food")
         .populate("subOrders.restaurant", "name")
         .sort({ createdAt: -1 });
+      
+      console.log(`Found ${orders.length} orders for restaurant ${restaurant._id}`);
     } else {
       // Admin sees all orders
       orders = await Order.find()
