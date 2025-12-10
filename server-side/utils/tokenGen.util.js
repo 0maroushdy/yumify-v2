@@ -15,6 +15,7 @@ export const generateToken = (res, user) => {
   const cookieOptions = {
     httpOnly: true,
     maxAge: 12 * 60 * 60 * 1000, // 12 hours
+    path: "/", // Ensure cookie is available for all paths
   };
   
   if (process.env.NODE_ENV === "production") {
@@ -27,7 +28,18 @@ export const generateToken = (res, user) => {
     cookieOptions.sameSite = "lax";
   }
   
+  console.log('Setting cookie with options:', {
+    httpOnly: cookieOptions.httpOnly,
+    secure: cookieOptions.secure,
+    sameSite: cookieOptions.sameSite,
+    path: cookieOptions.path,
+    maxAge: cookieOptions.maxAge,
+    NODE_ENV: process.env.NODE_ENV
+  });
+  
   res.cookie("token", token, cookieOptions);
+  
+  console.log('Cookie set successfully for user:', user.email);
 
   return token;
 };

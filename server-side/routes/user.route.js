@@ -1153,6 +1153,7 @@ router.post("/logout", (req, res) => {
   // Cookie settings must match the login cookie settings
   const cookieOptions = {
     httpOnly: true,
+    path: "/", // Must match the path used when setting the cookie
   };
   
   if (process.env.NODE_ENV === "production") {
