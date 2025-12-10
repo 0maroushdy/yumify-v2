@@ -23,9 +23,12 @@ const router = e.Router();
 router.post("/register", async (req, res) => {
   const { name, email, password, role } = req.body;
 
+  console.log("Registration attempt:", { name, email, role: role || 'not provided' });
+
   try {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
+      console.log("Registration failed: User already exists with email:", email);
       return res
         .status(400)
         .json({ message: "User with this email already exists" });
@@ -46,6 +49,7 @@ router.post("/register", async (req, res) => {
     });
 
     await newUser.save();
+    console.log("User created successfully:", { userId: newUser._id, email: newUser.email, role: newUser.role });
 
     if (role === "owner") {
       const newRestaurant = new Restaurant({
@@ -57,6 +61,7 @@ router.post("/register", async (req, res) => {
       await newRestaurant.save();
       newUser.restaurant = newRestaurant._id;
       await newUser.save();
+      console.log("Restaurant created for owner:", newRestaurant._id);
     }
 
 
@@ -65,13 +70,23 @@ router.post("/register", async (req, res) => {
       ? `https://${process.env.RENDER_SERVICE_NAME || 'yumify-backend'}.onrender.com`
       : 'http://localhost:5000');
     const verificationUrl = `${baseUrl}/api/user/verify/${token}`;
-    await sendEmail(
+    
+    // Send response immediately, then send email asynchronously (non-blocking)
+    res.status(201).json({ 
+      message: "User registered successfully. Please check your email to verify your account.",
+      email: email // Include email in response for confirmation
+    });
+    
+    // Send verification email asynchronously (don't block the response)
+    sendEmail(
       email,
       "Email Verification",
       `Please verify your email by clicking here : ${verificationUrl}`
-    );
-
-    return res.status(201).json({ message: "User registered successfully" });
+    ).catch((emailError) => {
+      // Log email error but don't fail the registration
+      console.error("Failed to send verification email to", email, ":", emailError.message);
+      // Optionally, you could store this in a queue to retry later
+    });
   } catch (error) {
     console.error("Error in POST /register:", error);
     res.status(500).json({ message: "Server error", error: error.message });
@@ -474,16 +489,25 @@ router.post("/resend-verification", async (req, res) => {
     user.verifyTokenExpiry = tokenExpiration;
     await user.save();
 
-    const verificationUrl = `http://localhost:5000/api/user/verify/${token}`;
+    // Use environment variable for base URL, fallback to localhost for development
+    const baseUrl = process.env.BACKEND_URL || (process.env.NODE_ENV === 'production' 
+      ? `https://${process.env.RENDER_SERVICE_NAME || 'yumify-backend'}.onrender.com`
+      : 'http://localhost:5000');
+    const verificationUrl = `${baseUrl}/api/user/verify/${token}`;
 
-    await sendEmail(
+    // Send response immediately, then send email asynchronously (non-blocking)
+    res.status(200).json({ 
+      message: "Verification email resent successfully. Please check your email." 
+    });
+    
+    // Send verification email asynchronously (don't block the response)
+    sendEmail(
       user.email,
       "Resend Email Verification",
       `Please verify your email by clicking here: ${verificationUrl}`
-    );
-
-    return res.status(200).json({ 
-      message: "Verification email resent successfully" 
+    ).catch((emailError) => {
+      // Log email error but don't fail the request
+      console.error("Failed to send verification email to", user.email, ":", emailError.message);
     });
 
   } catch (error) {
