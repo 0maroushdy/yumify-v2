@@ -60,7 +60,11 @@ router.post("/register", async (req, res) => {
     }
 
 
-    const verificationUrl = `http://localhost:5000/api/user/verify/${token}`;
+    // Use environment variable for base URL, fallback to localhost for development
+    const baseUrl = process.env.BACKEND_URL || (process.env.NODE_ENV === 'production' 
+      ? `https://${process.env.RENDER_SERVICE_NAME || 'yumify-backend'}.onrender.com`
+      : 'http://localhost:5000');
+    const verificationUrl = `${baseUrl}/api/user/verify/${token}`;
     await sendEmail(
       email,
       "Email Verification",
@@ -1146,11 +1150,20 @@ router.patch('/markAllAsRead', protect, async (req, res) => {
 
 // user logout route
 router.post("/logout", (req, res) => {
-  res.clearCookie("token", {
+  // Cookie settings must match the login cookie settings
+  const cookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
+  };
+  
+  if (process.env.NODE_ENV === "production") {
+    cookieOptions.secure = true;
+    cookieOptions.sameSite = "none";
+  } else {
+    cookieOptions.secure = false;
+    cookieOptions.sameSite = "lax";
+  }
+  
+  res.clearCookie("token", cookieOptions);
   res.status(200).json({ message: "Logout successful" });
 });
 
