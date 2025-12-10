@@ -8,4 +8,13 @@ const foodAPI = axios.create({
   withCredentials: true, // Include cookies in requests
 });
 
+// Add request interceptor to include Bearer token as fallback if cookies don't work
+foodAPI.interceptors.request.use((config) => {
+  const token = localStorage.getItem('authToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export default foodAPI;

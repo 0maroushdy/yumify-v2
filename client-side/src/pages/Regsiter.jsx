@@ -30,16 +30,30 @@ userAPI.post('/register',{
     role:role
 }).then((res)=>{
   console.log("Registration successful:", res.data);
-    toast.success("Registration successful!");
+    // Show success toast with better message
+    toast.success("Registration successful! Please check your email to verify your account.", {
+      duration: 5000,
+      icon: '✅',
+    });
+    
+    // Clear form
     setFullName("");
-setRegEmail("");
-setCreatePassword("");
-setConfirmPassword("");
-setRole('');
-setTermsAccepted(false);
-  navigator('/emailVerfication');
+    setRegEmail("");
+    setCreatePassword("");
+    setConfirmPassword("");
+    setRole('');
+    setTermsAccepted(false);
+    
+    // Redirect to login page after a short delay to show the toast
+    setTimeout(() => {
+      navigator('/login');
+    }, 1500);
 }).catch((err)=>{
-  toast.error("Registration failed. Please try again.");
+  // Show more detailed error message
+  const errorMessage = err.response?.data?.message || "Registration failed. Please try again.";
+  toast.error(errorMessage, {
+    duration: 4000,
+  });
   console.error("Registration failed:", err);
 });
 

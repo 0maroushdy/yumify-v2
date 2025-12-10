@@ -11,4 +11,13 @@ const orderAPI = axios.create({
     withCredentials: true, 
 });
 
+// Add request interceptor to include Bearer token as fallback if cookies don't work
+orderAPI.interceptors.request.use((config) => {
+  const token = localStorage.getItem('authToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export default orderAPI;

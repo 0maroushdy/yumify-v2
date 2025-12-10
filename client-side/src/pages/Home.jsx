@@ -133,6 +133,7 @@ const Home = () => {
             <button
               onClick={() => {
                 userAPI.post("/logout").then(() => {
+                  localStorage.removeItem('authToken'); // Clear token from localStorage
                   navigator("/login");
                 });
               }}

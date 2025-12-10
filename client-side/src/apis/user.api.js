@@ -10,6 +10,15 @@ const userAPI = axios.create({
   withCredentials: true, // Include cookies in requests
 });
 
+// Add request interceptor to include Bearer token as fallback if cookies don't work
+userAPI.interceptors.request.use((config) => {
+  const token = localStorage.getItem('authToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 // Add response interceptor to handle 401 errors gracefully
 userAPI.interceptors.response.use(
   (response) => response,

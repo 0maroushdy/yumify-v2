@@ -8,7 +8,16 @@ const cartAPI = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-   withCredentials: true, // Include cookies for authentication}
+   withCredentials: true, // Include cookies for authentication
+});
+
+// Add request interceptor to include Bearer token as fallback if cookies don't work
+cartAPI.interceptors.request.use((config) => {
+  const token = localStorage.getItem('authToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 export default cartAPI;
