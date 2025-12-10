@@ -3,6 +3,7 @@ import userAPI from "../apis/user.api.js";
 import Food from "../components/Food.jsx";
 import { Link, useNavigate } from "react-router";
 import { Heart, Menu, ReceiptTextIcon } from "lucide-react";
+import { UPLOADS_BASE_URL } from "../utils/config";
 
 const Favorites = () => {
   const [sideBarOpened, setSideBarOpened] = useState(false);
@@ -124,7 +125,7 @@ const Favorites = () => {
                   className="p-2 w-14 h-14 rounded-full text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-[#1a2a3a]"
                 >
                   <img
-                    src={`http://localhost:5000/uploads/users/${userData.imageUrl}`}
+                    src={`${UPLOADS_BASE_URL}/users/${userData.imageUrl}`}
                     alt="Profile Pic"
                     className="rounded-full"
                   />

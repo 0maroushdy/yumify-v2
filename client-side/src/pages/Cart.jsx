@@ -5,6 +5,7 @@ import cartAPI from '../apis/cart.api';
 import { useNavigate } from 'react-router';
 import { ArrowLeft } from 'lucide-react';
 import EmptyCart from './EmptyCart';
+import { UPLOADS_BASE_URL } from '../utils/config';
 
 const Cart = () => {
   const [cart, setCart] = useState(null);
@@ -78,12 +79,12 @@ const Cart = () => {
               className="rounded-full w-full h-full object-cover"
               src={
                 userData?.imageUrl
-                  ? `http://localhost:5000/uploads/users/${userData.imageUrl}`
-                  : `http://localhost:5000/uploads/users/def.svg`
+                  ? `${UPLOADS_BASE_URL}/users/${userData.imageUrl}`
+                  : `${UPLOADS_BASE_URL}/users/def.svg`
               }
               alt="Profile pic"
               onError={(e) => {
-                e.target.src = 'http://localhost:5000/uploads/users/def.svg';
+                e.target.src = `${UPLOADS_BASE_URL}/users/def.svg`;
               }}
             />
           </button>

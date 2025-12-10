@@ -21,3 +21,4 @@ yarn-error.log*
 # editor folders
 .vscode/
 .idea/
+DEPLOYMENT.md

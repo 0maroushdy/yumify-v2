@@ -10,6 +10,7 @@ import {
   ChevronDown
 } from "lucide-react";
 import userAPI from "../apis/user.api.js";
+import { UPLOADS_BASE_URL } from "../utils/config";
 
 // Primary accent color: #FF7A18
 const PRIMARY_COLOR = "#FF7A18";
@@ -320,7 +321,7 @@ const Menu = () => {
                         <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 dark:bg-[#0b2632]">
                           {item.imageUrl ? (
                             <img
-                              src={`http://localhost:5000/uploads/foods/${item.imageUrl}`}
+                              src={`${UPLOADS_BASE_URL}/foods/${item.imageUrl}`}
                               alt={item.name}
                               className="w-full h-full object-cover"
                             />

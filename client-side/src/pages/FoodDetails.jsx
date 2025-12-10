@@ -7,6 +7,7 @@ import cartApi from "../apis/cart.api";
 import reviewAPI from "../apis/review.api";
 import userAPI from "../apis/user.api";
 import toast from "react-hot-toast";
+import { UPLOADS_BASE_URL } from "../utils/config";
 
 const FoodDetails = () => {
   const [counter, setCounter] = useState(1);
@@ -177,8 +178,8 @@ const FoodDetails = () => {
                 <img
                   src={
                     userData?.imageUrl
-                      ? `http://localhost:5000/uploads/users/${userData.imageUrl}`
-                      : "http://localhost:5000/uploads/users/def.svg"
+                      ? `${UPLOADS_BASE_URL}/users/${userData.imageUrl}`
+                      : `${UPLOADS_BASE_URL}/users/def.svg`
                   }
                   alt="Profile Avatar"
                   className="h-full w-full object-cover rounded-full"
@@ -198,7 +199,7 @@ const FoodDetails = () => {
               <img
                 src={
                   foodDetails
-                    ? `http://localhost:5000/uploads/foods/${foodDetails.imageUrl}`
+                    ? `${UPLOADS_BASE_URL}/foods/${foodDetails.imageUrl}`
                     : "https://via.placeholder.com/400"
                 }
                 alt={foodDetails?.name || "Food Item"}
@@ -352,7 +353,7 @@ const FoodDetails = () => {
                 >
                   <div className="aspect-square w-full overflow-hidden rounded-2xl bg-gray-200 dark:bg-[#0b1420] group-hover:opacity-75 transition-all">
                     <img
-                      src={`http://localhost:5000/uploads/foods/${food.imageUrl}`}
+                      src={`${UPLOADS_BASE_URL}/foods/${food.imageUrl}`}
                       alt={food.name}
                       className="h-full w-full object-cover object-center"
                     />

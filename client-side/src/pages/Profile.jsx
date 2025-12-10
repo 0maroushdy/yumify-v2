@@ -3,6 +3,7 @@ import { useLayoutEffect, useState } from "react";
 import userAPI from "../apis/user.api";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
+import { UPLOADS_BASE_URL } from "../utils/config";
 
 const Profile = () => {
   const [pass, setPass] = useState("");
@@ -69,7 +70,7 @@ const updateUserData = async (field, value) => {
                 id="profile-img"
                 src={
                   userData
-                    ? `http://localhost:5000/uploads/users/${userData.imageUrl}`
+                    ? `${UPLOADS_BASE_URL}/users/${userData.imageUrl}`
                     : "https://placehold.co/128x128/E5E5E5/999999?text=Upload"
                 }
                 className="w-32 h-32 rounded-full object-cover border-4 border-gray-100 dark:border-[rgba(255,255,255,0.03)]"

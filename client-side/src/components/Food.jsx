@@ -5,6 +5,7 @@ import userAPI from "../apis/user.api";
 import { useState } from "react";
 import { useTheme } from "../context/ThemeContext";
 import toast from "react-hot-toast";
+import { UPLOADS_BASE_URL } from "../utils/config";
 
 const Food = ({ foodObj, userFavs, setCart }) => {
   const { darkMode } = useTheme();
@@ -110,7 +111,7 @@ const Food = ({ foodObj, userFavs, setCart }) => {
           src={
             imageError
               ? "https://placehold.co/400x300?text=Food+Image"
-              : `http://localhost:5000/uploads/foods/${foodObj.imageUrl}`
+              : `${UPLOADS_BASE_URL}/foods/${foodObj.imageUrl}`
           }
           alt={foodObj.name}
           onError={() => setImageError(true)}

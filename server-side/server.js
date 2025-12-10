@@ -21,8 +21,11 @@ dotenv.config(); // Load environment variables (.env file mongoDB connection, PO
 
 const app = e();// Initialize Express app
 app.use(cookieParser()); // Middleware to parse cookies
+
+// CORS configuration - allow frontend URL from environment variable or default to localhost for development
+const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: frontendUrl,
   credentials: true,
 }));    // Enable CORS for cross-origin requests
 app.use(e.json());  // Middleware to parse JSON request bodies

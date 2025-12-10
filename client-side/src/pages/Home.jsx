@@ -5,6 +5,7 @@ import userAPI from "../apis/user.api.js";
 import { Link, useNavigate } from "react-router";
 import cartAPI from "../apis/cart.api.js";
 import toast from "react-hot-toast";
+import { UPLOADS_BASE_URL } from "../utils/config";
 import {
   Menu,
   ReceiptTextIcon,
@@ -194,7 +195,7 @@ const Home = () => {
                   className="p-2 w-14 h-14 rounded-full text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
                 >
                   <img
-                    src={`http://localhost:5000/uploads/users/${
+                    src={`${UPLOADS_BASE_URL}/users/${
                       userData.imageUrl || "default.png"
                     }`}
                     alt="Profile Pic"
@@ -378,7 +379,7 @@ const Home = () => {
                 >
                   <div className="flex items-center">
                     <img
-                      src={`http://localhost:5000/uploads/foods/${
+                      src={`${UPLOADS_BASE_URL}/foods/${
                         item.food.imageUrl || "default.jpg"
                       }`}
                       onError={(e) => {

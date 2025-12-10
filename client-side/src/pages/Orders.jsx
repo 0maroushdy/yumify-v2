@@ -4,6 +4,7 @@ import OrderCard from "../components/Order";
 import { Link, useNavigate } from "react-router";
 import { ArrowLeft } from "lucide-react";
 import NoOrders from "./NoOrders";
+import { UPLOADS_BASE_URL } from "../utils/config";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -36,7 +37,7 @@ const Orders = () => {
             className="p-2 w-14 h-14 rounded-full text-gray-700 hover:bg-gray-200 dark:hover:bg-[#15202b] dark:text-gray-200"
           >
             <img
-              src={`http://localhost:5000/uploads/users/def.svg`}
+              src={`${UPLOADS_BASE_URL}/users/def.svg`}
               alt="Profile"
               className="rounded-full border dark:border-gray-700"
             />
